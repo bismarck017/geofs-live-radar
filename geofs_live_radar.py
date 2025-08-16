@@ -331,7 +331,7 @@ HTML_PAGE = r"""<!doctype html>
                     currentAirspaces.push(airspace.name);
                     if (!prevAirspaces.includes(airspace.name)) {
                         //console.log(`ALERT: ${callsign} has ENTERED our ${airspace.name}`);
-                        sendDiscordMessage(`ALERT: ${callsign} has ENTERED our ${airspace.name}`);
+                        sendDiscordMessage(`ALERT:    ${callsign} has ENTERED our ${airspace.name} @Verified `);
                     }
                 }
             }
