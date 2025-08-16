@@ -171,7 +171,7 @@ def airspace_monitor_loop():
                     if inside and not was_inside:
                         # Player just entered
                         print(f"{callsign} ENTERED {space['name']}")
-                        send_discord_message(f"ALERT:        {callsign} has ENTERED our {space['name']} <@&ROLE_ID>")
+                        send_discord_message(f"ALERT:        {callsign} has ENTERED our {space['name']} <@&{ROLE_ID}>")
                         AC_STATE[user_id][space['name']] = True
 
                     elif not inside and was_inside:
