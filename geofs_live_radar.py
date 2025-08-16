@@ -49,6 +49,7 @@ def send_discord_message(msg):
     try:
         payload = {"content": f"{msg}"} if ROLE_ID else {"content": msg}
         r = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=5)
+        print("Discord response:", r.status_code, r.text)
         r.raise_for_status()
     except Exception as e:
         print("Discord message failed:", e)
