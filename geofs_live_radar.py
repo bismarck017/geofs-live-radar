@@ -122,6 +122,7 @@ HTML_PAGE = r"""<!doctype html>
   const ANIMATE_MS = REFRESH_MS;
   const STALE_MS = 15000;
   const LABEL_ZOOM_MIN = 0;
+  const roleId = "1203013719752446042";
   const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1406218574845972501/U01k2UlXJJl7X51qVyajddgh-rFAqOPn4Wg9tMkOw88TPQ_ZlynOl8swbg9xmJooD7PU";
 
 
@@ -331,7 +332,7 @@ HTML_PAGE = r"""<!doctype html>
                     currentAirspaces.push(airspace.name);
                     if (!prevAirspaces.includes(airspace.name)) {
                         //console.log(`ALERT: ${callsign} has ENTERED our ${airspace.name}`);
-                        sendDiscordMessage(`ALERT:    ${callsign} has ENTERED our ${airspace.name} @Verified `);
+                        sendDiscordMessage(`ALERT:          ${callsign} has ENTERED our ${airspace.name} <@&${roleId}> `);
                     }
                 }
             }
