@@ -162,33 +162,32 @@ def airspace_monitor_loop():
                 if not show:
                     continue
 
-                # Stable user key: prefer id, then acid, then callsign
+                # Unique user key
                 user_id = str(u.get('id') or u.get('acid') or callsign)
                 
-                # Initialize state if not present
+                # Ensure storage exists
                 if user_id not in AC_STATE:
                     AC_STATE[user_id] = {}
-                
                 for space in AIRSPACES:
-                    inside = point_in_polygon(lat, lon, space['coords'])
-                    was_inside = AC_STATE[user_id].get(space['name'], False)
+                    if space['name'] not in AC_STATE[user_id]:
+                        AC_STATE[user_id][space['name']] = False  # default: outside
+                
+                # Check if inside polygon
+                inside = point_in_polygon(lat, lon, space['coords'])
+                was_inside = AC_STATE[user_id][space['name']]
+                
+                # Transition: OUT → IN
+                if inside and not was_inside:
+                    print(f"[DEBUG] {callsign} ENTERED {space['name']}")
+                    send_discord_message(f"✈️ {callsign} has ENTERED {space['name']} <@&{ROLE_ID}>")
+                    AC_STATE[user_id][space['name']] = True   # <-- update state
+                
+                # Transition: IN → OUT
+                elif not inside and was_inside:
+                    print(f"[DEBUG] {callsign} LEFT {space['name']}")
+                    send_discord_message(f"⬅️ {callsign} has LEFT {space['name']}")
+                    AC_STATE[user_id][space['name']] = False  # <-- update state
 
-                key = (user_id, space['name'])
-                last = LAST_EVENT.get(key)  # 'enter' / 'exit' / None
-            
-                # Enter event (only once until they leave)
-                if inside and not was_inside and last != 'enter':
-                    print(f"{callsign} ENTERED {space['name']}")
-                    send_discord_message(f"ALERT:    {callsign} has ENTERED our {space['name']} <@&{ROLE_ID}>")
-                    AC_STATE[user_id][space['name']] = True
-                    LAST_EVENT[key] = 'enter'
-            
-                # Exit event (only once until they enter again)
-                elif not inside and was_inside and last != 'exit':
-                    print(f"{callsign} LEFT {space['name']}")
-                    send_discord_message(f"{callsign} has LEFT {space['name']}")
-                    AC_STATE[user_id][space['name']] = False
-                    LAST_EVENT[key] = 'exit'
 
     # If still inside (or still outside), do nothing—no repeats.
 
