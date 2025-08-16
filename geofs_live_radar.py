@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # ------------------ Config ------------------
 PORT = 5000
-DISCORD_WEBHOOK_URL = "YOUR_DISCORD_WEBHOOK"
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1406156183827382282/nRpVsLaN8uAV9189JmzwKthgv7vLTOMGMJwss-SYV8AzTyuYkJ0NjYSzrCPryFPxJ13D"
 AC_MAP_URL = None  # keep as it is unless you load external AC map
 
 # Track who is in airspace
