@@ -179,7 +179,7 @@ def airspace_monitor_loop():
                 # Enter event (only once until they leave)
                 if inside and not was_inside and last != 'enter':
                     print(f"{callsign} ENTERED {space['name']}")
-                    send_discord_message(f"ALERT: {callsign} has ENTERED our {space['name']} <@&{ROLE_ID}>")
+                    send_discord_message(f"ALERT:    {callsign} has ENTERED our {space['name']} <@&{ROLE_ID}>")
                     AC_STATE[user_id][space['name']] = True
                     LAST_EVENT[key] = 'enter'
             
@@ -198,9 +198,6 @@ def airspace_monitor_loop():
 
         time.sleep(REFRESH_INTERVAL)
 
-@app.before_request
-def activate_job():
-    threading.Thread(target=airspace_monitor_loop, daemon=True).start()
 
 
 # ---------------- HTML/JS UI ----------------
@@ -561,6 +558,8 @@ if __name__ == "__main__":
             print("Error loading AC map:", e)
     else:
         print(f"Using default AC map with {len(_ac_map)} entries. Set AC_MAP_URL to load more.")
+
+     threading.Thread(target=airspace_monitor_loop, daemon=True).start()
 
     print(f"GeoFS Live Radar running on http://0.0.0.0:{PORT}")
     app.run(host="0.0.0.0", port=PORT, debug=False)
