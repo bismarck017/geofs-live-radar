@@ -185,7 +185,7 @@ def airspace_monitor_loop():
 
         time.sleep(REFRESH_INTERVAL)
 
-@app.before_first_request
+@app.before_request
 def activate_job():
     threading.Thread(target=airspace_monitor_loop, daemon=True).start()
 
