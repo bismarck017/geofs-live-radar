@@ -433,5 +433,6 @@ if __name__ == "__main__":
     else:
         print(f"Using default AC map with {len(_ac_map)} entries. Set AC_MAP_URL to load more.")
 
-    print(f"GeoFS Live Radar running on http://127.0.0.1:{PORT}")
-    app.run(host="127.0.0.1", port=PORT, debug=False)
+    print(f"GeoFS Live Radar running on http://0.0.0.1:{PORT}")
+    app.run(host="0.0.0.0", port=PORT, debug=False)
+
