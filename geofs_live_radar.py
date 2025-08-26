@@ -82,7 +82,7 @@ HTML_PAGE = r"""<!doctype html>
 <html>
 <head>
 <meta charset="utf-8" />
-<title>IAF Radar </title>
+<title>GeoFS Radar</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <style>
@@ -108,11 +108,12 @@ HTML_PAGE = r"""<!doctype html>
 <body>
 <div id="map"></div>
 <div class="hud">
-  <div style="font-weight:700">IAF Radar</div>
+  <div style="font-weight:700">GeoFS Military Radar</div>
   <div id="stats">Loading…</div>
   <div id="last">—</div>
   <br>
-  <div style="font-size:10px;">&copy; developed by MASSIV4515[IAF]</div>
+  <div style="font-size:10px;">&copy; developed by MASSIV4515</div>
+  <div><b>Contact Us: massiv4515@gmail.com</b></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
