@@ -113,7 +113,7 @@ HTML_PAGE = r"""<!doctype html>
   <div id="last">—</div>
   <br>
   <div style="font-size:10px;">&copy; developed by MASSIV4515</div>
-  <div><b>Contact Us: massiv4515@gmail.com</b></div>
+  <div><i>Contact Us: massiv4515@gmail.com</i></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
@@ -183,8 +183,9 @@ HTML_PAGE = r"""<!doctype html>
 
 
   // Define keywords to filter callsigns
-  //const SHOW_KEYWORDS = ["[U]","[UTP]","[P]","[PMC]","[SHL]","[NFS]","[RPAF]","[RNLAF]","[RNZAF]","[USAF]","[RAAF]","[tuAF]","[TuAF]","[TUAF]","[TASC]","[TaSC]","[UAC]","[UAEAF]","[USSR]","[BAF]","[PAF]","[RAF]","(U)","(UTP)","(P)","(PMC)","(RNLAF)","(RNZAF)","(SHL)","(NFS)","(RPAF)","(RAAF)","(USAF)","(tuAF)","(TuAF)","(TASC)","(TaSC)","(TUAF)","(UAC)","(UAEAF)","(USSR)","(BAF)","(PAF)","(RAF)"]; // add your keywords here // add your keywords here
-  const SHOW_KEYWORDS = ["[U]","[UTP]","[P]","[PMC]","[NKG-KG]","[SHL]","[NFS]","[RPAF]","[WANK]","[NIUF]","[RNLAF]","[RNZAF]","[USAF]","[RAAF]","[tuAF]","[TuAF]","[TUAF]","[TASC]","[TaSC]","[UAC]","[UAEAF]","[USSR]","[BAF]","[PAF]","[RAF]","(U)","(UTP)","(P)","(NKG-KG)","(PMC)","(RNLAF)","(RNZAF)","(SHL)","(NFS)","(RPAF)","(RAAF)","(USAF)","(tuAF)","(TuAF)","(TASC)","(TaSC)","(TUAF)","(UAC)","(UAEAF)","(USSR)","(BAF)","(WANK)","(NIUF)","(PAF)","(RAF)"]
+  //const SHOW_KEYWORDS = ["[U]","[UTP]","[P]","[PMC]","[SHL]","[NFS]","[RPAF]","[AEF]","[RNLAF]","[RNZAF]","[USAF]","[RAAF]","[tuAF]","[TuAF]","[TUAF]","[TASC]","[TaSC]","[UAC]","[UAEAF]","[USSR]","[BAF]","[PAF]","[RAF]","(U)","(UTP)","(P)","(PMC)","(RNLAF)","(RNZAF)","(SHL)","(NFS)","(RPAF)","(RAAF)","(USAF)","(tuAF)","(TuAF)","(TASC)","(TaSC)","(TUAF)","(UAC)","(UAEAF)","(USSR)","(BAF)","(PAF)","(RAF)"]; // add your keywords here // add your keywords here
+  
+  const SHOW_KEYWORDS = ["[U]","[UTP]","[P]","[PMC]","[NKG-KG]","[SHL]","[NFS]","[AEF]","[RPAF]","[WANK]","[NIUF]","[RNLAF]","[RNZAF]","[USAF]","[RAAF]","[tuAF]","[TuAF]","[TUAF]","[TASC]","[TaSC]","[UAC]","[UAEAF]","[USSR]","[BAF]","[PAF]","[RAF]","(U)","(UTP)","(P)","(NKG-KG)","(PMC)","(RNLAF)","(AEF)","(RNZAF)","(SHL)","(NFS)","(RPAF)","(RAAF)","(USAF)","(tuAF)","(TuAF)","(TASC)","(TaSC)","(TUAF)","(UAC)","(UAEAF)","(USSR)","(BAF)","(WANK)","(NIUF)","(PAF)","(RAF)"]
 
 
   let AC_MAP = {};
@@ -198,8 +199,8 @@ HTML_PAGE = r"""<!doctype html>
   AIRSPACES.forEach(space => {
     L.polygon(space.coords.map(p => [p.lat, p.lon]), {
         color: 'orange',
-        weight: 0.25,
-        fillOpacity: 0.05
+        weight: 0,
+        fillOpacity: 0
     }).addTo(map);
   });
 
