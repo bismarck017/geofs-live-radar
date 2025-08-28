@@ -316,7 +316,7 @@ HTML_PAGE = r"""<!doctype html>
 
             // --- Exclude specific bot ---
             if (csRaw.toLowerCase() === 'randomassguy[u]') continue;
-            if (csRaw.toLowerCase() === 'EventHorizon[USAF]') continue;
+            if (csRaw === 'EventHorizon[USAF]') continue;
 
             const callsign = csRaw;
 
