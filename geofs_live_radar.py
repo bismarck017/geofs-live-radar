@@ -24,39 +24,8 @@ UPSTREAM_URL = "https://mps.geo-fs.com/map"
 TIMEOUT = 3
 PORT = int(os.environ.get("PORT", 5000))
 
-AC_MAP_URL = None  # Optional: set to JSON file of aircraft mappings
-
-SMALL_DEFAULT_AC_MAP = {
-    "1": "Piper Cub",
-    "2": "Cessna Citation",
-    "4": "F-16",
-    "5": "Cessna 172",
-    "10": "Airbus A320",
-    "13": "Airbus A380",
-    "18": "Boeing 737",
-    "24": "Boeing 747/777 (large)",
-    "29": "B737 Classic",
-    "1013": "Aero L-1011 (community?)",
-}
-
 # ---------------- Flask / proxy ----------------
 app = Flask(__name__)
-_ac_map = SMALL_DEFAULT_AC_MAP.copy()
-
-def try_load_ac_map():
-    """Load external aircraft map if provided."""
-    global _ac_map
-    if not AC_MAP_URL:
-        return
-    try:
-        r = requests.get(AC_MAP_URL, timeout=8)
-        r.raise_for_status()
-        data = r.json()
-        if isinstance(data, dict):
-            _ac_map = {str(k): str(v) for k, v in data.items()}
-            print(f"Loaded AC map from {AC_MAP_URL} ({len(_ac_map)} entries)")
-    except Exception as e:
-        print("Failed to load external AC map:", e)
 
 @app.route("/api/map", methods=["GET"])
 def proxy_map():
@@ -69,10 +38,6 @@ def proxy_map():
         return resp
     except Exception as e:
         return make_response(json.dumps({"error": str(e)}), 502, {"Content-Type": "application/json"})
-
-@app.route("/api/acmap", methods=["GET"])
-def api_acmap():
-    return make_response(json.dumps(_ac_map), 200, {"Content-Type": "application/json"})
 
 @app.route("/", methods=["GET"])
 def index():
@@ -167,11 +132,6 @@ HTML_PAGE = r"""<!doctype html>
     "(UAEAF)","(USSR)","(BAF)","(WANK)","(NIUF)","(PAF)","(RAF)"
   ];
 
-  let AC_MAP = {};
-  try {
-    const r = await fetch('/api/acmap');
-    AC_MAP = await r.json();
-  } catch (e) { AC_MAP = {}; }
 
   const map = L.map('map', { 
     preferCanvas:true, 
@@ -344,13 +304,6 @@ HTML_PAGE = r"""<!doctype html>
 
 # ------------------ Main ------------------
 if __name__ == "__main__":
-    if AC_MAP_URL:
-        try:
-            try_load_ac_map()
-        except Exception as e:
-            print("Error loading AC map:", e)
-    else:
-        print(f"Using default AC map with {len(_ac_map)} entries. Set AC_MAP_URL to load more.")
-
+    
     print(f"GeoFS Live Radar running on http://0.0.0.0:{PORT}")
     app.run(host="0.0.0.0", port=PORT, debug=False)
