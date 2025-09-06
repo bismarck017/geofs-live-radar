@@ -88,7 +88,7 @@ HTML_PAGE = r"""<!doctype html>
 <style>
   html,body,#map { height:100%; margin:0; }
   .hud {
-    position:absolute; left:8px; top:8px; z-index:9999;
+    position:fixed; left:8px; top:8px; z-index:9999;
     background:rgba(0,0,0,0.65); color:#fff; padding:8px 10px; border-radius:8px;
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial; font-size:13px;
   }
@@ -109,6 +109,29 @@ HTML_PAGE = r"""<!doctype html>
     margin: 40px auto;
     border: 2px solid;
   }
+  .contact-bar {
+    background: rgba(0,0,0,0.8);
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    margin-top: 15px;
+    border-radius: 6px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .contact-bar a {
+    color: #0af;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .contact-bar a:hover {
+    text-decoration: underline;
+  }
+
 </style>
 </head>
 <body>
@@ -117,10 +140,16 @@ HTML_PAGE = r"""<!doctype html>
   <div style="font-weight:700">GeoFS Military Radar</div>
   <div id="stats">Loading…</div>
   <div id="last">—</div>
-  <br>
-  <div style="font-size:10px;">&copy; developed by MASSIV4515</div>
-  <div><i>Contact Us: massiv4515@gmail.com</i></div>
 </div>
+
+<div class="contact-bar">
+  📧 Email: <a href="mailto:massiv4515@gmail.com">massiv4515@gmail.com</a> &nbsp;|&nbsp;
+  💬 Discord: <a href="https://discord.com/users/1063031652546269254" target="_blank">massiv4515</a> &nbsp;|&nbsp;
+  💻 GitHub: <a href="https://github.com/Massiv4515" target="_blank">Massiv4515</a>
+
+  <div style="font-size:10px;">&copy; developed by MASSIV4515</div>
+</div>
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
