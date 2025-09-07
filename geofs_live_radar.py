@@ -47,6 +47,7 @@ def index():
 HTML_PAGE = r"""<!doctype html>
 <html>
 <head>
+<script defer data-domain="geofs-live-radar.onrender.com" src="https://plausible.io/js/script.js"></script>
 <meta charset="utf-8" />
 <title>GeoFS Radar</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
