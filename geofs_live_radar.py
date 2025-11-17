@@ -132,8 +132,8 @@ HTML_PAGE = r"""<!doctype html>
   const SHOW_KEYWORDS = [
     "[U]","[UTP]","[P]","[PMC]","[NKG-KG]","[SHL]","[NFS]","[AEF]",
     "[RPAF]","[WANK]","[NIUF]","[RNLAF]","[RNZAF]","[USAF]","[RAAF]", "[TBD]", "[CAEAF]",
-    "[TUAF]","[TASC]","[UAC]","[UAEAF]","[USSR]","[BAF]","[PAF]", "[JASDF]","[RAF]", "[RFAF]", "[EVKS]", "[VKS]", "[ACP]", "[PYR]",
-    "(U)","(UTP)","(P)","(NKG-KG)","(PMC)","(RNLAF)","(AEF)","(RNZAF)", "(RFAF)", "(EVKS)", "(VKS)", "(ACP)", "(PYR)",
+    "[TUAF]","[TASC]","[UAC]","[UAEAF]","[USSR]","[BAF]","[PAF]", "[JASDF]","[RAF]", "[RFAF]", "[EVKS]", "[VKS]", "[ACP]", "[PYR]", "[FFL]",
+    "(U)","(UTP)","(P)","(NKG-KG)","(PMC)","(RNLAF)","(AEF)","(RNZAF)", "(RFAF)", "(EVKS)", "(VKS)", "(ACP)", "(PYR)", "(FFL)",
     "(SHL)","(NFS)","(RPAF)","(RAAF)","(USAF)", "(JASDF)", "(TUAF)","(TASC)","(UAC)",
     "(UAEAF)","(USSR)","(BAF)","(WANK)","(NIUF)","(PAF)","(RAF)", "(TBD)", "(CAEAF)"
   ];
