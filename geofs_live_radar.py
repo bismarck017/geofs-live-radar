@@ -136,7 +136,7 @@ HTML_PAGE = r"""<!doctype html>
 
   // Show only callsigns with these tags
   const SHOW_KEYWORDS = [
-    "[U]","[UTP]","[P]","[PMC]","[NKG-KG]","[SHL]","[NFS]","[AEF]",
+    "[U]","[UTP]","[P]","[PMC]","[NKG-KG]","[SHL]","[NFS]","[AEF]", lasallian", "butter", "ek-069", "tarun", "massiv4515", "walch",
     "[RPAF]","[WANK]","[NIUF]","[RNLAF]","[RNZAF]","[USAF]","[RAAF]", "[TBD]", "[CAEAF]",
     "[TUAF]","[TASC]","[UAC]","[UAEAF]","[USSR]","[BAF]","[PAF]", "[JASDF]","[RAF]", "[RFAF]", "[EVKS]", "[VKS]", "[ACP]", "[PYR]", "[FFL]", "[IAF]", "[AAF]", "[CAF]", "[IOA]", "[PLAAF]",
     "(U)","(UTP)","(P)","(NKG-KG)","(PMC)","(RNLAF)","(AEF)","(RNZAF)", "(RFAF)", "(EVKS)", "(VKS)", "(ACP)", "(PYR)", "(FFL)", "(IAF)", "(AAF)", "(CAF)", "(IOA)", "(PLAAF)",
