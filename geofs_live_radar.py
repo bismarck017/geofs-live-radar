@@ -12,6 +12,8 @@ Features:
 - Proxies GeoFS public endpoint as /api/map
 - Shows all aircraft filtered by keywords
 - Smooth marker updates with heading + callsign labels
+- Shows all Aircraft's Details
+- Advanced Search Filter
 """
 
 from flask import Flask, Response, make_response
@@ -59,6 +61,7 @@ HTML_PAGE = r"""<!doctype html>
     --bg-panel: rgba(255,255,255,0.85);
     --toggle-button: rgba(0,0,0,0.65);
     --bg-map-border: #ccc;
+    --bg-search-panel-border: #ccc;
 
     --text-main: #000;
     --text-muted: #444;
@@ -75,6 +78,7 @@ HTML_PAGE = r"""<!doctype html>
     --bg-panel: rgba(0,0,0,0.7);
     --toggle-button: rgba(255,255,255,0.5);
     --bg-map-border: #1e2a38;
+    --bg-search-panel-border: rgba(0,255,140,0.35);
 
     --text-main: #ffffff;
     --text-muted: #b0b0b0;
@@ -82,6 +86,7 @@ HTML_PAGE = r"""<!doctype html>
     --label-bg: #2a2a2a;
     --label-text: #39FF14;
     --label-border: rgba(255,255,255,0.15);
+    --filter-header-color: #30f00c;
 
     --accent: #00ff9c;
   }
@@ -220,8 +225,203 @@ HTML_PAGE = r"""<!doctype html>
     color: #fff;
   }
 
+  body.dark .leaflet-popup-content-wrapper {
+    border: 1px solid rgba(0,255,140,0.25);
+  }
 
 
+  /* FILTER MODAL */
+
+  .filter-toggle {
+    position: fixed;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    z-index: 10000;
+
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.25);
+
+    cursor: pointer;
+    font-weight: 700;
+
+    background: rgba(0,0,0,0.65);
+    color: white;
+
+    backdrop-filter: blur(6px);
+  }
+
+
+  .filter-panel {
+    position: fixed;
+    top: 65px;
+    left: 50%;
+    transform: translateX(-50%) scale(.96);
+
+    width: fit-content;
+    min-width: 320px;
+    max-width: 95%;
+
+    max-height: none;
+
+    background: var(--bg-panel);
+    color: var(--text-main);
+
+    border: 1px solid var(--bg-search-panel-border);
+    border-radius: 12px;
+
+    box-shadow: 0 18px 35px rgba(0,0,0,0.45);
+
+    padding: 12px 14px;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+
+    z-index: 12000;
+  }
+
+  .filter-panel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(-17%) scale(1);
+  }
+
+
+
+  .filter-header {
+    color: var(--filter-header-color);
+    font-family: sans-serif;
+    font-weight: 200;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 15px;
+  }
+
+  .close-btn {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text-main);
+  }
+
+  .tag-input-row {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0;
+  }
+
+  #tagInput {
+    flex: 1;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--bg-map-border);
+    background: var(--bg-main);
+    color: var(--text-main);
+  }
+
+
+  /* BUTTONS — clean glass style */
+
+  .add-btn,
+  #resetBtn {
+    padding: 8px 12px;
+    border-radius: 10px;
+
+    background: rgba(255,255,255,0.35);
+    border: 1px solid rgba(0,0,0,0.15);
+    color: #111;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    backdrop-filter: blur(8px);
+
+    transition: background .15s ease, transform .15s ease, box-shadow .15s ease;
+  }
+
+  .add-btn:hover,
+  #resetBtn:hover {
+    background: rgba(255,255,255,0.55);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(0,0,0,0.15);
+  }
+
+  /* DARK MODE BUTTONS */
+  body.dark .add-btn,
+  body.dark #resetBtn {
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(0,255,140,0.28);
+    color: #dfffe7;
+  }
+
+  body.dark .add-btn:hover,
+  body.dark #resetBtn:hover {
+    background: rgba(0,0,0,0.75);
+    box-shadow: 0 14px 26px rgba(0,0,0,0.6);
+  }
+
+
+  .tag-list {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    background: rgba(255,255,255,0.45);
+    padding: 2px 6px;
+    border-radius: 5px;
+    color: #0a0a0a;
+    border: 1px solid rgba(0,0,0,0.15);
+    backdrop-filter: blur(6px);
+    font-weight: 600;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  body.dark .tag {
+    background: rgba(0,0,0,0.55);
+    color: #D0D9CD;
+    border: 1px solid rgba(0,255,140,0.35);
+  }
+
+  .tag button {
+    font-size: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: bold;
+    opacity: 0.6;
+    transition: opacity .15s;
+  }
+
+  .tag button:hover {
+    opacity: 1;
+  }
+
+  body.dark .tag button {
+    font-size: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: bold;
+    color: #D0D9CD;
+    opacity: 0.6;
+    transition: opacity .15s;
+  }
+
+  body.dark .tag button:hover {
+    opacity: 1;
+  }
 
 </style>
 </head>
@@ -243,6 +443,28 @@ HTML_PAGE = r"""<!doctype html>
 
 <button id="themeToggle" class="theme-toggle">🌙</button>   
 
+<!-- FILTER MODAL -->
+<div id="filterPanel" class="filter-panel">
+  <div class="filter-header">
+    <span>Filters:</span>
+    <button id="closeFilter" class="close-btn">✖</button>
+  </div>
+
+  <div class="tag-input-row">
+    <input id="tagInput" type="text" placeholder="Example: DoI, [UAE], Harry…">
+    <button id="addTagBtn" class="add-btn">Add</button>
+  </div>
+
+  <div id="tagList" class="tag-list"></div>
+
+  <button id="resetBtn" class="add-btn" style="margin-top:10px; width:100%;"> Reset </button>
+
+</div>
+
+<!-- OPEN BUTTON -->
+<button id="openFilter" class="filter-toggle">🔍 Filter-Callsigns</button>
+
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
 (async function(){
@@ -252,14 +474,21 @@ HTML_PAGE = r"""<!doctype html>
   const LABEL_ZOOM_MIN = 0;
 
   // Show only callsigns with these tags
-  const SHOW_KEYWORDS = [
+  const DEFAULT_TAGS = [
     "[U]","[UTP]","[P]","[PMC]","[NKG-KG]","[SHL]","[NFS]","[AEF]", "lasallian", "butter", "ek-069", "tarun", "massiv4515", "walch", "ljf", "ek-1", "notipa", "est201", "raptor4001", "speedbird",
-    "[RPAF]","[WANK]","[NIUF]","[RNLAF]","[RNZAF]","[USAF]","[RAAF]", "[TBD]", "[CAEAF]", "[Luftwaffe]", "[BPYR]", "[BYDAF]", "[Luftwafe]", "[FAF]", "[MAC]", "[PRC]", "xavier", "tassin",
-    "[TUAF]","[TASC]","[UAC]","[UAEAF]","[USSR]","[BAF]","[PAF]", "[JASDF]","[RAF]", "[RFAF]", "[EVKS]", "[VKS]", "[ACP]", "[PYR]", "[FFL]", "[IAF]", "[AAF]", "[CAF]", "[IOA]", "[PLAAF]", "[RIAF]", "AF]",
-    "(U)","(UTP)","(P)","(NKG-KG)","(PMC)","(RNLAF)","(AEF)","(RNZAF)", "(RFAF)", "(EVKS)", "(VKS)", "(ACP)", "(PYR)", "(FFL)", "(IAF)", "(AAF)", "(CAF)", "(IOA)", "(PLAAF)", "AF)",
-    "(SHL)","(NFS)","(RPAF)","(RAAF)","(USAF)", "(JASDF)", "(TUAF)","(TASC)","(UAC)", "(RIAF)", "(Luftwaffe)",
-    "(UAEAF)","(USSR)","(BAF)","(WANK)","(NIUF)","(PAF)","(RAF)", "(TBD)", "(CAEAF)"
+    "[WANK]", "[NIUF]", "[TBD]", "[Luftwaffe]", "[BPYR]", "[Luftwafe]", "[MAC]", "[PRC]", "xavier", "tassin",
+    "[TASC]", "[UAC]", "[USSR]", "[JASDF]", "[EVKS]", "[VKS]", "[ACP]", "[PYR]", "[FFL]", "[IOA]", "AF]"
   ];
+
+  const TAGS_KEY = "geofs_radar_tags";
+
+  
+  let activeTags;
+  try {
+    activeTags = JSON.parse(localStorage.getItem(TAGS_KEY)) || [...DEFAULT_TAGS];
+  } catch {
+    activeTags = [...DEFAULT_TAGS];
+  }
 
 
   
@@ -472,6 +701,16 @@ lightTiles.addTo(map);
 
   function nowMs(){ return Date.now(); }
 
+  
+  document.getElementById("resetBtn").onclick = () => {
+    activeTags = [...DEFAULT_TAGS];
+    renderTags();
+    applyFilterNow();
+    localStorage.removeItem(TAGS_KEY);
+    location.reload(); //remove this in the next update
+  };
+
+
 
 
   function svgArrow(deg){
@@ -586,7 +825,7 @@ lightTiles.addTo(map);
             const callsign = csRaw;
 
             // Keyword filter
-            const show = SHOW_KEYWORDS.length === 0 || SHOW_KEYWORDS.some(k => callsign.toUpperCase().includes(k.toUpperCase()));
+            const show = activeTags.length === 0 || activeTags.some(k => callsign.toUpperCase().includes(k.toUpperCase()));
             if (!show) continue;
 
             const id = String(u.id || u.acid || Math.random());
@@ -693,6 +932,107 @@ lightTiles.addTo(map);
         setTimeout(refreshLoop, REFRESH_MS);
     }
   }
+
+
+  function applyFilterNow() {
+    for (const id in AC) {
+        const it = AC[id];
+        const cs = it.callsign || "";
+
+        const show =
+            activeTags.length === 0 ||
+            activeTags.some(k =>
+                cs.toUpperCase().includes(k.toUpperCase())
+            );
+
+        if (!show) {
+            if (it.marker) map.removeLayer(it.marker);
+            if (it.label) map.removeLayer(it.label);
+            delete AC[id];
+        }
+    }
+  }
+
+
+  
+  const panel = document.getElementById("filterPanel");
+  const openBtn = document.getElementById("openFilter");
+  const closeBtn = document.getElementById("closeFilter");
+
+
+  function renderTags() {
+    const list = document.getElementById("tagList");
+    list.innerHTML = "";
+
+    activeTags.forEach((tag, i) => {
+      const el = document.createElement("div");
+      el.className = "tag";
+      el.innerHTML = `
+        ${tag}
+        <button onclick="removeTag(${i}, event)">✖</button>
+      `;
+      list.appendChild(el);
+    });
+
+    // SAVE
+    localStorage.setItem(TAGS_KEY, JSON.stringify(activeTags));
+
+  }
+
+  window.removeTag = function(i, e){
+    e.stopPropagation();
+    activeTags.splice(i, 1);
+    renderTags();
+    applyFilterNow();
+  };
+
+
+  document.getElementById("addTagBtn").onclick = () => {
+    const inp = document.getElementById("tagInput");
+    const v = inp.value.trim();
+    if (!v) return;
+
+    activeTags.push(v);
+    inp.value = "";
+    renderTags();
+    applyFilterNow();
+  };
+
+  const tagInput = document.getElementById("tagInput");
+
+  tagInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      document.getElementById("addTagBtn").click();
+    }
+  });
+
+
+  
+
+
+  openBtn.onclick = () => panel.classList.toggle("open");
+  closeBtn.onclick = () => panel.classList.remove("open");
+
+  document.addEventListener("click", (e) => {
+    const themeBtn = document.getElementById("themeToggle");
+
+    if (
+      panel.contains(e.target) ||
+      openBtn.contains(e.target) ||
+      themeBtn.contains(e.target)
+    ) {
+      return;                 // don't close
+    }
+
+    panel.classList.remove("open");
+  });
+
+
+
+
+
+  renderTags();
 
   startAnimationLoop();
   refreshLoop();
