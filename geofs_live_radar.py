@@ -16,8 +16,8 @@ Features:
 - Advanced Search Filter
 """
 
-from flask import Flask, Response, make_response
-import requests
+from flask import Flask, Response, make_response 
+import requests 
 import os
 import json
 
@@ -54,6 +54,7 @@ HTML_PAGE = r"""<!doctype html>
 <title>GeoFS Radar</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <style>
 
   :root {
@@ -135,9 +136,8 @@ HTML_PAGE = r"""<!doctype html>
 
   
   #map { 
-    height:90%;
-    width:95%;  
-    margin: 40px auto;
+    height:95%;
+    width:100%;  
     border: 2px solid var(--bg-map-border);
   }
 
@@ -147,12 +147,9 @@ HTML_PAGE = r"""<!doctype html>
     background: rgba(0,0,0,0.8);
     color: white;
     text-align: center;
-    padding: 8px;
     font-family: system-ui, sans-serif;
     font-size: 14px;
-    margin-top: 15px;
-    border-radius: 6px;
-    width: 95%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -169,27 +166,24 @@ HTML_PAGE = r"""<!doctype html>
 
   .theme-toggle {
     position: fixed;
-    top: 15px;
-    right: 15px;
+    top: 8px;
+    right: 8px;
     z-index: 10000;
-
     width: 50px;
     height: 50px;
-    border-radius: 50%;
     border: none;
-
-    background: var(--toggle-button);
-    color: var(--accent);
-
-    font-size: 18px;
-    cursor: pointer;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    backdrop-filter: blur(6px);
+    cursor: pointer;
     transition: transform 0.2s ease;
+
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    border-radius: 8px; 
+
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial;
+    font-size: 18px;
   }
 
   .theme-toggle:hover {
@@ -234,23 +228,20 @@ HTML_PAGE = r"""<!doctype html>
 
   .filter-toggle {
     position: fixed;
-    top: 2px;
+    top: 8px;
     left: 50%;
     transform: translateX(-50%);
-
     z-index: 10000;
-
     padding: 10px 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.25);
-
     cursor: pointer;
-    font-weight: 700;
 
     background: rgba(0,0,0,0.65);
-    color: white;
-
-    backdrop-filter: blur(6px);
+    color: #fff;
+    border-radius: 8px; 
+    
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial;
+    font-size: 13px;
+    font-weight: 700; 
   }
 
 
@@ -434,14 +425,16 @@ HTML_PAGE = r"""<!doctype html>
 </div>
 
 <div class="contact-bar">
-  📧 Email: <a href="mailto:massiv4515@gmail.com">massiv4515@gmail.com</a> &nbsp;|&nbsp;
-  💬 Discord: <a href="https://discord.com/users/1421366810200244246" target="_blank">massiv4515</a> &nbsp;|&nbsp;
-  💻 GitHub: <a href="https://github.com/Massiv4515" target="_blank">Massiv4515</a> &nbsp;|&nbsp;
-  🤝 Contributors: <a href="https://discord.com/users/702415876904976424" target="_blank">BigBoi69</a>
+  <span class="material-symbols-outlined">mail</span> Email: <a href="mailto:massiv4515@gmail.com">massiv4515@gmail.com</a> &nbsp;|&nbsp;
+  <span class="material-symbols-outlined">chat_bubble</span> Discord: <a href="https://discord.com/users/1421366810200244246" target="_blank">massiv4515</a> &nbsp;|&nbsp;
+  <span class="material-symbols-outlined">computer</span> GitHub: <a href="https://github.com/Massiv4515" target="_blank">Massiv4515</a> &nbsp;|&nbsp;
+  <span class="material-symbols-outlined">handshake</span> Contributors: <a href="https://discord.com/users/702415876904976424" target="_blank">BigBoi69</a>
   <div style="font-size:10px;">&copy; developed by MASSIV4515</div>
 </div>
 
-<button id="themeToggle" class="theme-toggle">🌙</button>   
+<button id="themeToggle" class="theme-toggle">
+  <span class="material-symbols-outlined">sunny</span> // not working
+</button>   
 
 <!-- FILTER MODAL -->
 <div id="filterPanel" class="filter-panel">
@@ -462,7 +455,7 @@ HTML_PAGE = r"""<!doctype html>
 </div>
 
 <!-- OPEN BUTTON -->
-<button id="openFilter" class="filter-toggle">🔍 Filter-Callsigns</button>
+<button id="openFilter" class="filter-toggle">Filter callsigns</button>
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
@@ -786,13 +779,6 @@ lightTiles.addTo(map);
     return (hdg + 360) % 360;
   }
 
-  
-  
-
-
-
-
-
   async function refreshLoop(){
     try {
         const r = await fetch('/api/map', {cache:'no-store'});
@@ -859,10 +845,6 @@ lightTiles.addTo(map);
                     LOCKED_ID = id;
                     this.openPopup();
                 });
-
-
-
-
                 const lab = L.marker([lat, lon], { icon: makeLabel(callsign), interactive:false });
                 if (map.getZoom() >= LABEL_ZOOM_MIN) lab.addTo(map);
                 AC[id] = {
@@ -881,10 +863,7 @@ lightTiles.addTo(map);
                     speed: u.st?.as ?? null,
                     aircraft: getAircraftName(u.ac),
                 };
-
                 m.setPopupContent(popupHTML(AC[id]));
-
-
             } else {
                 prevItem.prevPos = prevItem.nextPos || { lat: prevItem.prevPos.lat, lon: prevItem.prevPos.lon };
                 prevItem.nextPos = { lat, lon };
@@ -905,26 +884,15 @@ lightTiles.addTo(map);
                 prevItem.aircraft = getAircraftName(u.ac);
                 prevItem.uid = u.id ?? prevItem.uid;
                 prevItem.acid = u.acid ?? prevItem.acid;
-
-
                 if (prevItem.marker){
                     prevItem.marker.setPopupContent(popupHTML(prevItem));
                 }
-
-
                 prevItem.lastSeen = t_fetch;
                 prevItem.callsign = callsign;
-
-
-
-
-
             }
         }
-
         document.getElementById('stats').textContent = `Showing ${Object.keys(AC).length} markers • Reported total: ${reported}`;
         document.getElementById('last').textContent = `Last fetch: ${new Date().toLocaleTimeString()}`;
-
     } catch(err){
         console.error("Fetch error:", err);
         document.getElementById('stats').textContent = 'Fetch error';
@@ -932,8 +900,6 @@ lightTiles.addTo(map);
         setTimeout(refreshLoop, REFRESH_MS);
     }
   }
-
-
   function applyFilterNow() {
     for (const id in AC) {
         const it = AC[id];
@@ -953,12 +919,9 @@ lightTiles.addTo(map);
     }
   }
 
-
-  
   const panel = document.getElementById("filterPanel");
   const openBtn = document.getElementById("openFilter");
   const closeBtn = document.getElementById("closeFilter");
-
 
   function renderTags() {
     const list = document.getElementById("tagList");
@@ -976,7 +939,6 @@ lightTiles.addTo(map);
 
     // SAVE
     localStorage.setItem(TAGS_KEY, JSON.stringify(activeTags));
-
   }
 
   window.removeTag = function(i, e){
@@ -985,7 +947,6 @@ lightTiles.addTo(map);
     renderTags();
     applyFilterNow();
   };
-
 
   document.getElementById("addTagBtn").onclick = () => {
     const inp = document.getElementById("tagInput");
@@ -1007,10 +968,6 @@ lightTiles.addTo(map);
     }
   });
 
-
-  
-
-
   openBtn.onclick = () => panel.classList.toggle("open");
   closeBtn.onclick = () => panel.classList.remove("open");
 
@@ -1027,10 +984,6 @@ lightTiles.addTo(map);
 
     panel.classList.remove("open");
   });
-
-
-
-
 
   renderTags();
 
@@ -1051,13 +1004,14 @@ lightTiles.addTo(map);
     }
   });
 
-
   const toggleBtn = document.getElementById("themeToggle");
 
   function setTheme(dark) {
     document.body.classList.toggle("dark", dark);
     localStorage.setItem("theme", dark ? "dark" : "light");
-    toggleBtn.textContent = dark ? "☀️" : "🌙";
+    toggleBtn.innerHTML = dark
+      ? '<span class="material-symbols-outlined">sunny</span>'
+      : '<span class="material-symbols-outlined">bedtime</span>';
 
     if (dark) {
         map.removeLayer(lightTiles);
@@ -1074,13 +1028,8 @@ lightTiles.addTo(map);
   toggleBtn.addEventListener("click", () => {
     setTheme(!document.body.classList.contains("dark"));
   });
-
-
 })();
-
 </script>
-
-
 </body>
 </html>
 """
