@@ -107,7 +107,7 @@ HTML_PAGE = r"""<!doctype html>
     font-size:12px;
     color: var(--label-text);
     border: 1px solid var(--label-border);
-    white-space:nowrap;
+    width: fit-content;
     pointer-events:none;
     box-shadow: 0 2px 6px rgba(0,0,0,0.35);
   }
@@ -128,7 +128,7 @@ HTML_PAGE = r"""<!doctype html>
         #202020
     );
   }
- 
+
   #map { 
     height:95%;
     width:100%;  
@@ -138,21 +138,41 @@ HTML_PAGE = r"""<!doctype html>
   .contact-bar {
     background: rgba(0,0,0,0.8);
     color: white;
-    text-align: center;
     font-family: system-ui, sans-serif;
     font-size: 14px;
+    font-weight: bold;
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;          
+    padding: 10px 20px;           
+    box-sizing: border-box;        
   }
+
+  .contact-bar-left {
+    opacity: 0.8;
+  }
+
+  .contact-bar-right {
+    display: flex;
+    align-items: center;
+  }
+
   .contact-bar a {
     color: #0af;
     margin: 0 10px;
     text-decoration: none;
     font-weight: bold;
   }
+
   .contact-bar a:hover {
     text-decoration: underline;
+  }
+
+  .material-symbols-outlined {
+    vertical-align: middle;
+    font-size: 18px; 
+    margin-right: 4px;
   }
 
   .theme-toggle {
@@ -302,6 +322,7 @@ HTML_PAGE = r"""<!doctype html>
     color: var(--text-main);
   }
 
+
   /* BUTTONS — clean glass style */
 
   .add-btn,
@@ -341,6 +362,7 @@ HTML_PAGE = r"""<!doctype html>
     background: rgba(0,0,0,0.75);
     box-shadow: 0 14px 26px rgba(0,0,0,0.6);
   }
+
 
   .tag-list {
     margin-top: 8px;
@@ -408,13 +430,16 @@ HTML_PAGE = r"""<!doctype html>
 </div>
 
 <div class="contact-bar">
-  <span class="material-symbols-outlined">mail</span> Email: <a href="mailto:massiv4515@gmail.com">massiv4515@gmail.com</a> &nbsp;|&nbsp;
-  <span class="material-symbols-outlined">chat_bubble</span> Discord: <a href="https://discord.com/users/1421366810200244246" target="_blank">massiv4515</a> &nbsp;|&nbsp;
-  <span class="material-symbols-outlined">computer</span> GitHub: <a href="https://github.com/Massiv4515" target="_blank">Massiv4515</a> &nbsp;|&nbsp;
-  <span class="material-symbols-outlined">handshake</span> Contributors: <a href="https://discord.com/users/702415876904976424" target="_blank">BigBoi69</a>
-  <div style="font-size:10px;">&copy; developed by MASSIV4515</div>
+  <div class="contact-bar-left">
+    <div>&copy; developed by MASSIV4515</div>
+  </div>
+  <div class="contact-bar-right">
+    <span class="material-symbols-outlined">mail</span> Email: <a href="mailto:massiv4515@gmail.com">massiv4515@gmail.com</a> &nbsp;|&nbsp;
+    <span class="material-symbols-outlined">chat_bubble</span> Discord: <a href="https://discord.com/users/1421366810200244246" target="_blank">massiv4515</a> &nbsp;|&nbsp;
+    <span class="material-symbols-outlined">computer</span> GitHub: <a href="https://github.com/Massiv4515" target="_blank">Massiv4515</a> &nbsp;|&nbsp;
+    <span class="material-symbols-outlined">handshake</span> Contributors: <a href="https://discord.com/users/702415876904976424" target="_blank">BigBoi69,</a><a href="https://github.com/bismarck017" target="_blank">Bismarck</a>
+  </div>
 </div>
-
 <button id="themeToggle" class="theme-toggle">
   <span class="material-symbols-outlined">sunny</span> // not working
 </button>   
@@ -432,10 +457,15 @@ HTML_PAGE = r"""<!doctype html>
   </div>
 
   <div id="tagList" class="tag-list"></div>
+
   <button id="resetBtn" class="add-btn" style="margin-top:10px; width:100%;"> Reset </button>
+
 </div>
+
 <!-- OPEN BUTTON -->
 <button id="openFilter" class="filter-toggle">Filter callsigns</button>
+
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
 (async function(){
@@ -453,6 +483,7 @@ HTML_PAGE = r"""<!doctype html>
 
   const TAGS_KEY = "geofs_radar_tags";
 
+  
   let activeTags;
   try {
     activeTags = JSON.parse(localStorage.getItem(TAGS_KEY)) || [...DEFAULT_TAGS];
@@ -460,6 +491,8 @@ HTML_PAGE = r"""<!doctype html>
     activeTags = [...DEFAULT_TAGS];
   }
 
+
+  
   const AIRCRAFT_DB = {
     1: "Piper Cub",
     2: "Cessna 172",
@@ -620,6 +653,8 @@ HTML_PAGE = r"""<!doctype html>
     return AIRCRAFT_DB[ac] || `Unknown Aircraft (ID ${ac})`;
   }
 
+
+  
   const AC = {};
 
   let LOCKED_ID = null;
@@ -631,6 +666,7 @@ HTML_PAGE = r"""<!doctype html>
     maxBounds: [[-300, -300], [300, 300]],
   }).setView([20,0], 2);
 
+  
   const lightTiles = L.tileLayer(
     'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     {
@@ -650,6 +686,9 @@ HTML_PAGE = r"""<!doctype html>
 // default (light mode)
 lightTiles.addTo(map);
 
+
+  
+
   map.on('click', function () {
     if (LOCKED_ID) {
         const it = AC[LOCKED_ID];
@@ -658,8 +697,12 @@ lightTiles.addTo(map);
     }
   });
 
+
+
+
   function nowMs(){ return Date.now(); }
 
+  
   document.getElementById("resetBtn").onclick = () => {
     activeTags = [...DEFAULT_TAGS];
     renderTags();
@@ -667,6 +710,9 @@ lightTiles.addTo(map);
     localStorage.removeItem(TAGS_KEY);
     location.reload(); //remove this in the next update
   };
+
+
+
 
   function svgArrow(deg){
     return `<div style="transform: rotate(${deg}deg); display:block;">
@@ -735,6 +781,7 @@ lightTiles.addTo(map);
     `;
   }
 
+  
   function normalizeHeading(hdg){
     if (typeof hdg !== 'number' || !isFinite(hdg)) return null;
     return (hdg + 360) % 360;
@@ -995,6 +1042,6 @@ lightTiles.addTo(map);
 </html>
 """
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     print(f"GeoFS Live Radar running on http://0.0.0.0:{PORT}")
     app.run(host="0.0.0.0", port=PORT, debug=False)
