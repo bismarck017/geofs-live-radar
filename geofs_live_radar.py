@@ -92,11 +92,7 @@ HTML_PAGE = r"""<!doctype html>
     --accent: #00ff9c;
   }
 
-
-
-
   html,body,#map { height:100%; margin:0; }
-
 
   .hud {
     position:fixed; left:8px; top:8px; z-index:9999;
@@ -132,16 +128,12 @@ HTML_PAGE = r"""<!doctype html>
         #202020
     );
   }
-
-
-  
+ 
   #map { 
     height:95%;
     width:100%;  
     border: 2px solid var(--bg-map-border);
   }
-
-
 
   .contact-bar {
     background: rgba(0,0,0,0.8);
@@ -162,7 +154,6 @@ HTML_PAGE = r"""<!doctype html>
   .contact-bar a:hover {
     text-decoration: underline;
   }
-
 
   .theme-toggle {
     position: fixed;
@@ -190,7 +181,6 @@ HTML_PAGE = r"""<!doctype html>
     transform: scale(1.08);
   }
 
-  
   /* Leaflet popup – light mode (optional, matches your UI) */
   .leaflet-popup-content-wrapper,
   .leaflet-popup-tip {
@@ -223,7 +213,6 @@ HTML_PAGE = r"""<!doctype html>
     border: 1px solid rgba(0,255,140,0.25);
   }
 
-
   /* FILTER MODAL */
 
   .filter-toggle {
@@ -243,7 +232,6 @@ HTML_PAGE = r"""<!doctype html>
     font-size: 13px;
     font-weight: 700; 
   }
-
 
   .filter-panel {
     position: fixed;
@@ -280,8 +268,6 @@ HTML_PAGE = r"""<!doctype html>
     transform: translateX(-50%) translateY(-17%) scale(1);
   }
 
-
-
   .filter-header {
     color: var(--filter-header-color);
     font-family: sans-serif;
@@ -315,7 +301,6 @@ HTML_PAGE = r"""<!doctype html>
     background: var(--bg-main);
     color: var(--text-main);
   }
-
 
   /* BUTTONS — clean glass style */
 
@@ -356,7 +341,6 @@ HTML_PAGE = r"""<!doctype html>
     background: rgba(0,0,0,0.75);
     box-shadow: 0 14px 26px rgba(0,0,0,0.6);
   }
-
 
   .tag-list {
     margin-top: 8px;
@@ -413,7 +397,6 @@ HTML_PAGE = r"""<!doctype html>
   body.dark .tag button:hover {
     opacity: 1;
   }
-
 </style>
 </head>
 <body>
@@ -449,15 +432,10 @@ HTML_PAGE = r"""<!doctype html>
   </div>
 
   <div id="tagList" class="tag-list"></div>
-
   <button id="resetBtn" class="add-btn" style="margin-top:10px; width:100%;"> Reset </button>
-
 </div>
-
 <!-- OPEN BUTTON -->
 <button id="openFilter" class="filter-toggle">Filter callsigns</button>
-
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
 (async function(){
@@ -475,7 +453,6 @@ HTML_PAGE = r"""<!doctype html>
 
   const TAGS_KEY = "geofs_radar_tags";
 
-  
   let activeTags;
   try {
     activeTags = JSON.parse(localStorage.getItem(TAGS_KEY)) || [...DEFAULT_TAGS];
@@ -483,8 +460,6 @@ HTML_PAGE = r"""<!doctype html>
     activeTags = [...DEFAULT_TAGS];
   }
 
-
-  
   const AIRCRAFT_DB = {
     1: "Piper Cub",
     2: "Cessna 172",
@@ -645,8 +620,6 @@ HTML_PAGE = r"""<!doctype html>
     return AIRCRAFT_DB[ac] || `Unknown Aircraft (ID ${ac})`;
   }
 
-
-  
   const AC = {};
 
   let LOCKED_ID = null;
@@ -658,7 +631,6 @@ HTML_PAGE = r"""<!doctype html>
     maxBounds: [[-300, -300], [300, 300]],
   }).setView([20,0], 2);
 
-  
   const lightTiles = L.tileLayer(
     'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     {
@@ -678,9 +650,6 @@ HTML_PAGE = r"""<!doctype html>
 // default (light mode)
 lightTiles.addTo(map);
 
-
-  
-
   map.on('click', function () {
     if (LOCKED_ID) {
         const it = AC[LOCKED_ID];
@@ -689,12 +658,8 @@ lightTiles.addTo(map);
     }
   });
 
-
-
-
   function nowMs(){ return Date.now(); }
 
-  
   document.getElementById("resetBtn").onclick = () => {
     activeTags = [...DEFAULT_TAGS];
     renderTags();
@@ -702,9 +667,6 @@ lightTiles.addTo(map);
     localStorage.removeItem(TAGS_KEY);
     location.reload(); //remove this in the next update
   };
-
-
-
 
   function svgArrow(deg){
     return `<div style="transform: rotate(${deg}deg); display:block;">
@@ -773,7 +735,6 @@ lightTiles.addTo(map);
     `;
   }
 
-  
   function normalizeHeading(hdg){
     if (typeof hdg !== 'number' || !isFinite(hdg)) return null;
     return (hdg + 360) % 360;
@@ -1034,8 +995,6 @@ lightTiles.addTo(map);
 </html>
 """
 
-# ------------------ Main ------------------
 if __name__ == "__main__":
-    
     print(f"GeoFS Live Radar running on http://0.0.0.0:{PORT}")
     app.run(host="0.0.0.0", port=PORT, debug=False)
