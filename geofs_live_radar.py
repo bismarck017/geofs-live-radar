@@ -474,7 +474,6 @@ HTML_PAGE = r"""<!doctype html>
   const STALE_MS = 15000;
   const LABEL_ZOOM_MIN = 0;
 
-  // Show only callsigns with these tags
   const DEFAULT_TAGS = [
     "[U]","[UTP]","[P]","[PMC]","[NKG-KG]","[SHL]","[NFS]","[AEF]", "lasallian", "butter", "ek-069", "tarun", "massiv4515", "walch", "ljf", "ek-1", "notipa", "est201", "raptor4001", "speedbird",
     "[WANK]", "[NIUF]", "[TBD]", "[Luftwaffe]", "[BPYR]", "[Luftwafe]", "[MAC]", "[PRC]", "xavier", "tassin",
@@ -483,7 +482,6 @@ HTML_PAGE = r"""<!doctype html>
 
   const TAGS_KEY = "geofs_radar_tags";
 
-  
   let activeTags;
   try {
     activeTags = JSON.parse(localStorage.getItem(TAGS_KEY)) || [...DEFAULT_TAGS];
@@ -491,8 +489,6 @@ HTML_PAGE = r"""<!doctype html>
     activeTags = [...DEFAULT_TAGS];
   }
 
-
-  
   const AIRCRAFT_DB = {
     1: "Piper Cub",
     2: "Cessna 172",
@@ -645,7 +641,6 @@ HTML_PAGE = r"""<!doctype html>
     5486: "Aviat A-1B Husky (by coolpilot11)",
     5499: "CubCrafters CC19 XCub (by AriakimTaiyo)",
     5516: "Boeing 747-400 LCF by Luca & (by JAaMDG)"
-    // you can keep extending this list
   };
 
   function getAircraftName(ac) {
@@ -653,10 +648,7 @@ HTML_PAGE = r"""<!doctype html>
     return AIRCRAFT_DB[ac] || `Unknown Aircraft (ID ${ac})`;
   }
 
-
-  
   const AC = {};
-
   let LOCKED_ID = null;
 
   const map = L.map('map', { 
@@ -683,12 +675,7 @@ HTML_PAGE = r"""<!doctype html>
     }
   );
 
-// default (light mode)
 lightTiles.addTo(map);
-
-
-  
-
   map.on('click', function () {
     if (LOCKED_ID) {
         const it = AC[LOCKED_ID];
@@ -697,22 +684,15 @@ lightTiles.addTo(map);
     }
   });
 
-
-
-
   function nowMs(){ return Date.now(); }
 
-  
   document.getElementById("resetBtn").onclick = () => {
     activeTags = [...DEFAULT_TAGS];
     renderTags();
     applyFilterNow();
     localStorage.removeItem(TAGS_KEY);
-    location.reload(); //remove this in the next update
+    location.reload(); 
   };
-
-
-
 
   function svgArrow(deg){
     return `<div style="transform: rotate(${deg}deg); display:block;">
@@ -739,7 +719,6 @@ lightTiles.addTo(map);
     return (θ * 180/Math.PI + 360) % 360;
   }
 
-  // Smooth animation loop
   let animating = false;
   function startAnimationLoop(){
     if (animating) return;
@@ -781,7 +760,6 @@ lightTiles.addTo(map);
     `;
   }
 
-  
   function normalizeHeading(hdg){
     if (typeof hdg !== 'number' || !isFinite(hdg)) return null;
     return (hdg + 360) % 360;
@@ -795,15 +773,11 @@ lightTiles.addTo(map);
         const users = Array.isArray(data.users) ? data.users : [];
         const reported = (typeof data.userCount === 'number') ? data.userCount : users.length;
         const t_fetch = nowMs();
-
         for (const u of users){
             if (!u || !Array.isArray(u.co) || u.co.length < 4) continue;
 
             const lat = u.co[0], lon = u.co[1], alt_in_meters = u.co[2], hdgServer = u.co[3];
-
             const alt = alt_in_meters * 3.28084;
-
-
 
             if (typeof lat !== 'number' || typeof lon !== 'number') continue;
             if (!isFinite(lat) || !isFinite(lon)) continue;
@@ -812,13 +786,11 @@ lightTiles.addTo(map);
             const csRaw = (typeof u.cs === 'string') ? u.cs.trim() : '';
             if (!csRaw) continue;
 
-            // Skip specific bots
             if (csRaw.toLowerCase() === 'randomassguy[u]') continue;
             if (csRaw === 'EventHorizon[USAF]') continue;
 
             const callsign = csRaw;
 
-            // Keyword filter
             const show = activeTags.length === 0 || activeTags.some(k => callsign.toUpperCase().includes(k.toUpperCase()));
             if (!show) continue;
 
@@ -842,14 +814,11 @@ lightTiles.addTo(map);
 
                 m.on('click', function (e) {
                     e.originalEvent.stopPropagation();
-                    // Clicking the same aircraft unlocks it
-                    if (LOCKED_ID === id) {
+                   if (LOCKED_ID === id) {
                         LOCKED_ID = null;
                         this.closePopup();
                         return;
                     }
-
-                    // Lock this aircraft
                     LOCKED_ID = id;
                     this.openPopup();
                 });
@@ -918,7 +887,6 @@ lightTiles.addTo(map);
             activeTags.some(k =>
                 cs.toUpperCase().includes(k.toUpperCase())
             );
-
         if (!show) {
             if (it.marker) map.removeLayer(it.marker);
             if (it.label) map.removeLayer(it.label);
@@ -945,7 +913,6 @@ lightTiles.addTo(map);
       list.appendChild(el);
     });
 
-    // SAVE
     localStorage.setItem(TAGS_KEY, JSON.stringify(activeTags));
   }
 
@@ -987,7 +954,7 @@ lightTiles.addTo(map);
       openBtn.contains(e.target) ||
       themeBtn.contains(e.target)
     ) {
-      return;                 // don't close
+      return;
     }
 
     panel.classList.remove("open");
@@ -998,7 +965,6 @@ lightTiles.addTo(map);
   startAnimationLoop();
   refreshLoop();
 
-  // Show/hide labels based on zoom
   map.on('zoomend', ()=>{
     const z = map.getZoom();
     for (const id in AC){
@@ -1030,7 +996,7 @@ lightTiles.addTo(map);
     }
   }
 
-  const saved = localStorage.getItem("theme");
+  const saved = localStorage.getItem("theme");  
   setTheme(saved === "dark");
 
   toggleBtn.addEventListener("click", () => {
