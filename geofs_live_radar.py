@@ -198,7 +198,7 @@ HTML_PAGE = r"""<!doctype html>
   }
 
   .theme-toggle:hover {
-    transform: scale(1.08);
+    filter: brightness(1.2);
   }
 
   /* Leaflet popup – light mode (optional, matches your UI) */
@@ -238,19 +238,26 @@ HTML_PAGE = r"""<!doctype html>
   .filter-toggle {
     position: fixed;
     top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10000;
-    padding: 10px 14px;
-    cursor: pointer;
+    right: 50%;
+    transform: translateX(50%);
 
-    background: rgba(0,0,0,0.65);
+    z-index: 10000;
+    width: fit-content;
+    height: 30px;
+    padding: 10px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    background: rgba(0, 0, 0, 0.65);
     color: #fff;
     border-radius: 8px; 
-    
+
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial;
-    font-size: 13px;
-    font-weight: 700; 
+    font-size: 18px;  
   }
 
   .filter-panel {
