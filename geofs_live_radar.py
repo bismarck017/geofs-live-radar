@@ -100,16 +100,15 @@ HTML_PAGE = r"""<!doctype html>
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial; font-size:13px;
   }
   .label {
-    background: var(--label-bg);
-    padding:3px 7px;
-    border-radius:4px;
-    font-weight:700;
-    font-size:12px;
+    background: transparent;
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 12px;
     color: var(--label-text);
-    border: 1px solid var(--label-border);
     width: fit-content;
-    pointer-events:none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
   
   body {
